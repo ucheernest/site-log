@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Site Log — Three-Bedroom Decoration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --paper:#F6F4EF;
+    --paper-2:#EFEBE1;
+    --ink:#232320;
+    --ink-soft:#5B584F;
+    --line:#D8D2C2;
+    --blue:#1F3A52;
+    --blue-2:#2E5372;
+    --grey:#8B8578;
+    --yellow:#E8B93C;
+    --red:#9C3B2E;
+    --green:#4B6B4C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
+  body{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    line-height:1.5;
+    padding:28px 20px 80px;
+    max-width:760px;
+    margin:0 auto;
+  }
+  h1,h2,h3{font-family:'Space Grotesk', sans-serif;margin:0;}
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    border-bottom:3px solid var(--ink);
+    padding-bottom:14px;
+    margin-bottom:6px;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .brand-mark{
+    display:inline-block;
+    background:var(--blue);
+    color:var(--paper);
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:11px;
+    letter-spacing:0.14em;
+    padding:3px 8px;
+    margin-bottom:8px;
+  }
+  h1{font-size:24px;font-weight:700;color:var(--ink);}
+  .project-name{font-size:13px;color:var(--ink-soft);margin-top:3px;}
+  .topbar-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  button{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    font-weight:600;
+    border:1.5px solid var(--ink);
+    background:var(--paper);
+    color:var(--ink);
+    padding:9px 14px;
+    cursor:pointer;
+    border-radius:2px;
+  }
+  button:hover{background:var(--ink);color:var(--paper);}
+  button.primary{background:var(--blue);color:var(--paper);border-color:var(--blue);}
+  button.primary:hover{background:var(--blue-2);border-color:var(--blue-2);}
+  button.ghost{border-color:var(--line);color:var(--ink-soft);}
+  button.ghost:hover{background:var(--paper-2);color:var(--ink);}
+  button.danger{border-color:var(--red);color:var(--red);background:var(--paper);}
+  button.danger:hover{background:var(--red);color:var(--paper);}
+  button.small{padding:5px 9px;font-size:11.5px;}
+
+  .meta-strip{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    color:var(--ink-soft);
+    padding:10px 0 22px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:22px;
+  }
+
+  /* Timeline */
+  .timeline{position:relative;}
+  .entry{
+    display:grid;
+    grid-template-columns:64px 1fr;
+    gap:0;
+    margin-bottom:4px;
+  }
+  .entry-rail{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .entry-rail::before{
+    content:"";
+    position:absolute;
+    top:6px;
+    bottom:-4px;
+    width:2px;
+    background:var(--line);
+  }
+  .entry:last-child .entry-rail::before{display:none;}
+  .day-num{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:20px;
+    line-height:1;
+    background:var(--paper);
+    z-index:1;
+    padding-top:2px;
+  }
+  .day-mon{
+    font-size:9.5px;
+    letter-spacing:0.1em;
+    color:var(--ink-soft);
+    background:var(--paper);
+    z-index:1;
+  }
+  .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--blue);
+    margin:8px 0 0;
+    z-index:1;
+    border:2px solid var(--paper);
+  }
+  .entry-card{
+    border:1.5px solid var(--ink);
+    background:#FFFEFB;
+    margin-bottom:22px;
+    position:relative;
+  }
+  .entry-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 16px;
+    cursor:pointer;
+    gap:10px;
+    background:var(--paper-2);
+    border-bottom:1.5px solid var(--ink);
+  }
+  .entry-head:hover{background:#E5E0D2;}
+  .entry-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;}
+  .entry-sub{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+  .chev{font-size:12px;color:var(--ink-soft);transition:transform .15s;}
+  .entry-card.open .chev{transform:rotate(90deg);}
+  .entry-body{display:none;padding:16px 16px 18px;}
+  .entry-card.open .entry-body{display:block;}
+
+  .section-label{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:var(--blue);
+    margin:16px 0 8px;
+    padding-bottom:4px;
+    border-bottom:1px solid var(--line);
+  }
+  .section-label:first-child{margin-top:0;}
+  ul.log-list{margin:0;padding-left:18px;}
+  ul.log-list li{margin-bottom:6px;}
+  .row-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:8px;
+    margin-bottom:6px;
+  }
+  .row-item .rm{color:var(--red);cursor:pointer;font-size:12px;border:none;background:none;padding:2px 4px;}
+
+  table.mat-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.mat-table th,table.mat-table td{
+    border:1px solid var(--line);
+    padding:6px 8px;
+    text-align:left;
+  }
+  table.mat-table th{background:var(--paper-2);font-weight:600;font-family:'Space Grotesk',sans-serif;font-size:10.5px;letter-spacing:0.05em;}
+  table.mat-table td.qty{white-space:nowrap;}
+
+  .flag{
+    background:#FBF2E2;
+    border-left:3px solid var(--yellow);
+    padding:8px 10px;
+    font-size:12.5px;
+    margin-bottom:6px;
+  }
+
+  .photo-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+  .photo-thumb{
+    width:84px;height:84px;
+    object-fit:cover;
+    border:1.5px solid var(--ink);
+    cursor:pointer;
+  }
+  .photo-add{
+    width:84px;height:84px;
+    border:1.5px dashed var(--grey);
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;color:var(--grey);
+    cursor:pointer;background:var(--paper-2);
+  }
+  .video-link{font-size:12.5px;word-break:break-all;}
+  .video-link a{color:var(--blue-2);}
+
+  .entry-footer{
+    display:flex;justify-content:flex-end;gap:8px;
+    margin-top:16px;padding-top:12px;border-top:1px solid var(--line);
+  }
+
+  .empty-state{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--ink-soft);
+    border:1.5px dashed var(--line);
+  }
+  .empty-state h3{font-size:16px;margin-bottom:8px;color:var(--ink);}
+
+  /* Modal */
+  .overlay{
+    display:none;position:fixed;inset:0;background:rgba(35,35,32,0.55);
+    align-items:flex-start;justify-content:center;z-index:50;
+    padding:30px 16px;overflow-y:auto;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    width:100%;max-width:600px;
+    padding:20px;
+  }
+  .modal h2{font-size:18px;margin-bottom:4px;}
+  .modal .sub{font-size:11.5px;color:var(--ink-soft);margin-bottom:16px;}
+  label{
+    display:block;font-size:11px;font-weight:600;letter-spacing:0.05em;
+    color:var(--ink-soft);margin-bottom:4px;margin-top:14px;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  label:first-of-type{margin-top:0;}
+  input[type=text],input[type=date],textarea,select{
+    width:100%;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    padding:8px 9px;
+    border:1.5px solid var(--line);
+    background:#fff;
+    color:var(--ink);
+    border-radius:2px;
+  }
+  input:focus,textarea:focus{outline:2px solid var(--blue-2);outline-offset:1px;border-color:var(--blue-2);}
+  textarea{resize:vertical;min-height:56px;}
+  .inline-add{display:flex;gap:6px;margin-top:8px;}
+  .inline-add input{flex:1;}
+  .mini-row{display:grid;grid-template-columns:1fr 100px 30px;gap:6px;margin-bottom:6px;align-items:center;}
+  .modal-actions{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-top:22px;padding-top:14px;border-top:1px solid var(--line);
+  }
+  .file-input-wrap{margin-top:8px;}
+  .status-msg{font-size:11.5px;color:var(--ink-soft);margin-top:6px;}
+
+  .lightbox{
+    display:none;position:fixed;inset:0;background:rgba(20,20,18,0.9);
+    align-items:center;justify-content:center;z-index:60;padding:24px;
+  }
+  .lightbox.show{display:flex;}
+  .lightbox img{max-width:100%;max-height:90vh;border:2px solid #fff;}
+  .lightbox-close{position:absolute;top:20px;right:26px;color:#fff;font-size:26px;cursor:pointer;font-family:'Space Grotesk',sans-serif;}
+
+  @media (max-width:480px){
+    .entry{grid-template-columns:44px 1fr;}
+    .day-num{font-size:16px;}
+    body{padding:20px 12px 70px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <span class="brand-mark">SITE LOG</span>
+    <h1>Three-Bedroom Decoration</h1>
+    <div class="project-name">Internal decoration — daily supervision record</div>
+  </div>
+  <div class="topbar-actions">
+    <button class="ghost" id="btnReport">Weekly Summary</button>
+    <button class="primary" id="btnNew">+ New Entry</button>
+  </div>
+</div>
+<div class="meta-strip">
+  <span id="entryCount">0 entries logged</span>
+  <span id="lastUpdated"></span>
+</div>
+
+<div class="timeline" id="timeline"></div>
+
+<div class="empty-state" id="emptyState" style="display:none;">
+  <h3>No entries yet</h3>
+  <div>Tap "New Entry" to log the first day on site.</div>
+</div>
+
+<!-- New / Edit Entry Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="modalTitle">New Site Entry</h2>
+    <div class="sub">Fill in what happened. Leave sections blank if not relevant — they won't show.</div>
+
+    <label>Date</label>
+    <input type="date" id="fDate">
+
+    <label>Trades &amp; activity (one line each)</label>
+    <div id="tradeRows"></div>
+    <div class="inline-add">
+      <input type="text" id="tradeInput" placeholder="e.g. Electrical — Mr. David: continued wiring">
+      <button class="small" id="addTrade">Add</button>
+    </div>
+
+    <label>Materials delivered / used</label>
+    <div id="matRows"></div>
+    <div class="mini-row">
+      <input type="text" id="matName" placeholder="Material">
+      <input type="text" id="matQty" placeholder="Qty">
+      <button class="small" id="addMat" style="padding:8px 0;">+</button>
+    </div>
+
+    <label>Issues / items to confirm</label>
+    <div id="flagRows"></div>
+    <div class="inline-add">
+      <input type="text" id="flagInput" placeholder="e.g. Confirm POP cement bag count">
+      <button class="small" id="addFlag">Add</button>
+    </div>
+
+    <label>Plan for tomorrow</label>
+    <div id="planRows"></div>
+    <div class="inline-add">
+      <input type="text" id="planInput" placeholder="e.g. POP contractor to start ceiling work">
+      <button class="small" id="addPlan">Add</button>
+    </div>
+
+    <label>Photos</label>
+    <div class="photo-grid" id="photoGrid"></div>
+    <div class="file-input-wrap">
+      <input type="file" id="photoInput" accept="image/*" multiple>
+    </div>
+    <div class="status-msg" id="photoStatus"></div>
+
+    <label>Video link (paste a shared link — YouTube, Drive, etc.)</label>
+    <input type="text" id="fVideo" placeholder="https://...">
+
+    <div class="modal-actions">
+      <button class="ghost" id="btnCancel">Cancel</button>
+      <button class="primary" id="btnSave">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- Report Modal -->
+<div class="overlay" id="reportOverlay">
+  <div class="modal" style="max-width:640px;">
+    <h2>Weekly Summary</h2>
+    <div class="sub">Covers all logged entries, most recent first. Copy this to share.</div>
+    <textarea id="reportText" style="min-height:340px;font-size:12px;"></textarea>
+    <div class="modal-actions">
+      <button class="ghost" id="btnCloseReport">Close</button>
+      <button class="primary" id="btnCopyReport">Copy to Clipboard</button>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightboxClose">&times;</span>
+  <img id="lightboxImg" src="">
+</div>
+
+<script>
+// Standalone storage shim: this page runs outside Claude's chat interface,
+// so we back the same window.storage interface with the browser's own
+// localStorage. Data stays on whichever device/browser opens this page.
+window.storage = {
+  async get(key){
+    const raw = localStorage.getItem('sitelog:' + key);
+    if(raw === null) throw new Error('Key not found: ' + key);
+    return { key, value: raw, shared: false };
+  },
+  async set(key, value){
+    localStorage.setItem('sitelog:' + key, value);
+    return { key, value, shared: false };
+  },
+  async delete(key){
+    localStorage.removeItem('sitelog:' + key);
+    return { key, deleted: true, shared: false };
+  },
+  async list(prefix){
+    prefix = prefix || '';
+    const keys = [];
+    for(let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      if(k && k.startsWith('sitelog:')){
+        const bare = k.slice('sitelog:'.length);
+        if(bare.startsWith(prefix)) keys.push(bare);
+      }
+    }
+    return { keys, prefix, shared: false };
+  }
+};
+</script>
+<script>
+const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+let entries = {}; // dateStr -> entry object
+let editingDate = null;
+let draft = null;
+
+function emptyEntry(dateStr){
+  return { date: dateStr, trades: [], materials: [], flags: [], plan: [], photos: [], video: "" };
+}
+
+function fmtDateLong(dateStr){
+  const d = new Date(dateStr + "T00:00:00");
+  const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  return `${days[d.getDay()]}, ${d.getDate()} ${["January","February","March","April","May","June","July","August","September","October","November","December"][d.getMonth()]} ${d.getFullYear()}`;
+}
+
+async function loadAllEntries(){
+  entries = {};
+  try{
+    const listRes = await window.storage.list('entry:', false);
+    const keys = (listRes && listRes.keys) || [];
+    for(const k of keys){
+      try{
+        const r = await window.storage.get(k, false);
+        if(r && r.value){
+          const obj = JSON.parse(r.value);
+          entries[obj.date] = obj;
+        }
+      }catch(e){ console.error('load entry failed', k, e); }
+    }
+  }catch(e){
+    console.error('list failed', e);
+  }
+  render();
+}
+
+async function saveEntry(entry){
+  const key = 'entry:' + entry.date;
+  try{
+    const res = await window.storage.set(key, JSON.stringify(entry), false);
+    if(!res){ alert('Could not save — storage returned no result. Try again.'); return false; }
+    entries[entry.date] = entry;
+    return true;
+  }catch(e){
+    console.error(e);
+    alert('Error saving entry. Please try again.');
+    return false;
+  }
+}
+
+async function deleteEntryByDate(dateStr){
+  const key = 'entry:' + dateStr;
+  try{
+    await window.storage.delete(key, false);
+    delete entries[dateStr];
+    render();
+  }catch(e){
+    console.error(e);
+    alert('Error deleting entry.');
+  }
+}
+
+function render(){
+  const timeline = document.getElementById('timeline');
+  const emptyState = document.getElementById('emptyState');
+  const dates = Object.keys(entries).sort().reverse();
+  document.getElementById('entryCount').textContent = dates.length + (dates.length===1?' entry logged':' entries logged');
+  if(dates.length){
+    const newest = new Date(dates[0]+"T00:00:00");
+    document.getElementById('lastUpdated').textContent = 'Latest: ' + dates[0];
+  } else {
+    document.getElementById('lastUpdated').textContent = '';
+  }
+
+  timeline.innerHTML = '';
+  if(!dates.length){ emptyState.style.display='block'; return; }
+  emptyState.style.display='none';
+
+  dates.forEach((dateStr, idx) => {
+    const e = entries[dateStr];
+    const d = new Date(dateStr+"T00:00:00");
+    const wrap = document.createElement('div');
+    wrap.className = 'entry';
+
+    const rail = document.createElement('div');
+    rail.className = 'entry-rail';
+    rail.innerHTML = `<div class="day-num">${String(d.getDate()).padStart(2,'0')}</div>
+                       <div class="day-mon">${MONTHS[d.getMonth()]}</div>
+                       <div class="dot"></div>`;
+
+    const card = document.createElement('div');
+    card.className = 'entry-card' + (idx===0 ? ' open' : '');
+
+    let bodyHTML = '';
+    if(e.trades && e.trades.length){
+      bodyHTML += `<div class="section-label">Trades &amp; Activity</div><ul class="log-list">`;
+      e.trades.forEach(t => bodyHTML += `<li>${escapeHtml(t)}</li>`);
+      bodyHTML += `</ul>`;
+    }
+    if(e.materials && e.materials.length){
+      bodyHTML += `<div class="section-label">Materials</div>
+        <table class="mat-table"><thead><tr><th>Material</th><th>Qty</th></tr></thead><tbody>`;
+      e.materials.forEach(m => bodyHTML += `<tr><td>${escapeHtml(m.name)}</td><td class="qty">${escapeHtml(m.qty)}</td></tr>`);
+      bodyHTML += `</tbody></table>`;
+    }
+    if(e.flags && e.flags.length){
+      bodyHTML += `<div class="section-label">Issues / To Confirm</div>`;
+      e.flags.forEach(f => bodyHTML += `<div class="flag">${escapeHtml(f)}</div>`);
+    }
+    if(e.plan && e.plan.length){
+      bodyHTML += `<div class="section-label">Plan for Tomorrow</div><ul class="log-list">`;
+      e.plan.forEach(p => bodyHTML += `<li>${escapeHtml(p)}</li>`);
+      bodyHTML += `</ul>`;
+    }
+    if((e.photos && e.photos.length) || e.video){
+      bodyHTML += `<div class="section-label">Media</div>`;
+      if(e.photos && e.photos.length){
+        bodyHTML += `<div class="photo-grid">`;
+        e.photos.forEach((p,i) => bodyHTML += `<img class="photo-thumb" src="${p}" data-date="${dateStr}" data-idx="${i}">`);
+        bodyHTML += `</div>`;
+      }
+      if(e.video){
+        bodyHTML += `<div class="video-link" style="margin-top:8px;">🎥 <a href="${escapeAttr(e.video)}" target="_blank" rel="noopener">${escapeHtml(e.video)}</a></div>`;
+      }
+    }
+    if(!bodyHTML){
+      bodyHTML = `<div style="color:var(--ink-soft);font-size:12.5px;">No details recorded for this entry.</div>`;
+    }
+    bodyHTML += `<div class="entry-footer">
+        <button class="ghost small" data-action="edit" data-date="${dateStr}">Edit</button>
+        <button class="danger small" data-action="delete" data-date="${dateStr}">Delete</button>
+      </div>`;
+
+    card.innerHTML = `
+      <div class="entry-head" data-toggle="${dateStr}">
+        <div>
+          <div class="entry-title">${fmtDateLong(dateStr)}</div>
+          <div class="entry-sub">${summaryLine(e)}</div>
+        </div>
+        <div class="chev">▶</div>
+      </div>
+      <div class="entry-body">${bodyHTML}</div>
+    `;
+
+    wrap.appendChild(rail);
+    wrap.appendChild(card);
+    timeline.appendChild(wrap);
+  });
+
+  // wire up interactions
+  document.querySelectorAll('[data-toggle]').forEach(el => {
+    el.addEventListener('click', () => {
+      el.closest('.entry-card').classList.toggle('open');
+    });
+  });
+  document.querySelectorAll('[data-action="edit"]').forEach(el => {
+    el.addEventListener('click', (ev) => { ev.stopPropagation(); openEditModal(el.dataset.date); });
+  });
+  document.querySelectorAll('[data-action="delete"]').forEach(el => {
+    el.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      if(confirm('Delete this entry for ' + el.dataset.date + '? This cannot be undone.')){
+        deleteEntryByDate(el.dataset.date);
+      }
+    });
+  });
+  document.querySelectorAll('.photo-thumb').forEach(img => {
+    img.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      document.getElementById('lightboxImg').src = img.src;
+      document.getElementById('lightbox').classList.add('show');
+    });
+  });
+}
+
+function summaryLine(e){
+  const parts = [];
+  if(e.trades && e.trades.length) parts.push(e.trades.length + ' trade update' + (e.trades.length>1?'s':''));
+  if(e.materials && e.materials.length) parts.push(e.materials.length + ' material' + (e.materials.length>1?'s':''));
+  if(e.flags && e.flags.length) parts.push(e.flags.length + ' flag' + (e.flags.length>1?'s':''));
+  if(e.photos && e.photos.length) parts.push(e.photos.length + ' photo' + (e.photos.length>1?'s':''));
+  return parts.length ? parts.join(' · ') : 'No details yet';
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(s){ return escapeHtml(s); }
+
+/* ---------- Modal / draft editing ---------- */
+
+function openNewModal(){
+  editingDate = null;
+  const today = new Date();
+  const iso = today.toISOString().slice(0,10);
+  draft = emptyEntry(iso);
+  document.getElementById('modalTitle').textContent = 'New Site Entry';
+  document.getElementById('fDate').value = iso;
+  document.getElementById('fDate').disabled = false;
+  renderDraftLists();
+  document.getElementById('fVideo').value = '';
+  document.getElementById('photoStatus').textContent = '';
+  document.getElementById('overlay').classList.add('show');
+}
+
+function openEditModal(dateStr){
+  editingDate = dateStr;
+  draft = JSON.parse(JSON.stringify(entries[dateStr]));
+  document.getElementById('modalTitle').textContent = 'Edit Entry — ' + dateStr;
+  document.getElementById('fDate').value = dateStr;
+  document.getElementById('fDate').disabled = true; // keep date as the key; avoid accidental collisions
+  renderDraftLists();
+  document.getElementById('fVideo').value = draft.video || '';
+  document.getElementById('photoStatus').textContent = '';
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('show');
+  draft = null; editingDate = null;
+}
+
+function renderDraftLists(){
+  const tradeRows = document.getElementById('tradeRows');
+  tradeRows.innerHTML = '';
+  draft.trades.forEach((t,i) => {
+    const row = document.createElement('div');
+    row.className = 'row-item';
+    row.innerHTML = `<span>${escapeHtml(t)}</span><button class="rm" data-i="${i}">remove</button>`;
+    row.querySelector('.rm').addEventListener('click', () => { draft.trades.splice(i,1); renderDraftLists(); });
+    tradeRows.appendChild(row);
+  });
+
+  const matRows = document.getElementById('matRows');
+  matRows.innerHTML = '';
+  draft.materials.forEach((m,i) => {
+    const row = document.createElement('div');
+    row.className = 'row-item';
+    row.innerHTML = `<span>${escapeHtml(m.name)} — ${escapeHtml(m.qty)}</span><button class="rm" data-i="${i}">remove</button>`;
+    row.querySelector('.rm').addEventListener('click', () => { draft.materials.splice(i,1); renderDraftLists(); });
+    matRows.appendChild(row);
+  });
+
+  const flagRows = document.getElementById('flagRows');
+  flagRows.innerHTML = '';
+  draft.flags.forEach((f,i) => {
+    const row = document.createElement('div');
+    row.className = 'row-item';
+    row.innerHTML = `<span>${escapeHtml(f)}</span><button class="rm" data-i="${i}">remove</button>`;
+    row.querySelector('.rm').addEventListener('click', () => { draft.flags.splice(i,1); renderDraftLists(); });
+    flagRows.appendChild(row);
+  });
+
+  const planRows = document.getElementById('planRows');
+  planRows.innerHTML = '';
+  draft.plan.forEach((p,i) => {
+    const row = document.createElement('div');
+    row.className = 'row-item';
+    row.innerHTML = `<span>${escapeHtml(p)}</span><button class="rm" data-i="${i}">remove</button>`;
+    row.querySelector('.rm').addEventListener('click', () => { draft.plan.splice(i,1); renderDraftLists(); });
+    planRows.appendChild(row);
+  });
+
+  const photoGrid = document.getElementById('photoGrid');
+  photoGrid.innerHTML = '';
+  draft.photos.forEach((p,i) => {
+    const img = document.createElement('img');
+    img.className = 'photo-thumb';
+    img.src = p;
+    img.title = 'Click to remove';
+    img.addEventListener('click', () => { draft.photos.splice(i,1); renderDraftLists(); });
+    photoGrid.appendChild(img);
+  });
+  const addBtn = document.createElement('div');
+  addBtn.className = 'photo-add';
+  addBtn.textContent = '+';
+  addBtn.addEventListener('click', () => document.getElementById('photoInput').click());
+  photoGrid.appendChild(addBtn);
+}
+
+function resizeImageFile(file, maxDim, quality){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if(w > h && w > maxDim){ h = Math.round(h * maxDim / w); w = maxDim; }
+        else if(h > maxDim){ w = Math.round(w * maxDim / h); h = maxDim; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject;
+      img.src = ev.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('photoInput').addEventListener('change', async (ev) => {
+  const files = Array.from(ev.target.files || []);
+  if(!files.length) return;
+  document.getElementById('photoStatus').textContent = 'Processing ' + files.length + ' photo(s)...';
+  for(const f of files){
+    try{
+      const dataUrl = await resizeImageFile(f, 900, 0.65);
+      draft.photos.push(dataUrl);
+    }catch(e){ console.error(e); }
+  }
+  document.getElementById('photoStatus').textContent = '';
+  ev.target.value = '';
+  renderDraftLists();
+});
+
+document.getElementById('addTrade').addEventListener('click', () => {
+  const inp = document.getElementById('tradeInput');
+  if(inp.value.trim()){ draft.trades.push(inp.value.trim()); inp.value=''; renderDraftLists(); }
+});
+document.getElementById('tradeInput').addEventListener('keydown', (e) => { if(e.key==='Enter'){ e.preventDefault(); document.getElementById('addTrade').click(); }});
+
+document.getElementById('addMat').addEventListener('click', () => {
+  const name = document.getElementById('matName');
+  const qty = document.getElementById('matQty');
+  if(name.value.trim()){
+    draft.materials.push({name:name.value.trim(), qty:qty.value.trim()});
+    name.value=''; qty.value='';
+    renderDraftLists();
+  }
+});
+
+document.getElementById('addFlag').addEventListener('click', () => {
+  const inp = document.getElementById('flagInput');
+  if(inp.value.trim()){ draft.flags.push(inp.value.trim()); inp.value=''; renderDraftLists(); }
+});
+document.getElementById('flagInput').addEventListener('keydown', (e) => { if(e.key==='Enter'){ e.preventDefault(); document.getElementById('addFlag').click(); }});
+
+document.getElementById('addPlan').addEventListener('click', () => {
+  const inp = document.getElementById('planInput');
+  if(inp.value.trim()){ draft.plan.push(inp.value.trim()); inp.value=''; renderDraftLists(); }
+});
+document.getElementById('planInput').addEventListener('keydown', (e) => { if(e.key==='Enter'){ e.preventDefault(); document.getElementById('addPlan').click(); }});
+
+document.getElementById('btnNew').addEventListener('click', openNewModal);
+document.getElementById('btnCancel').addEventListener('click', closeModal);
+
+document.getElementById('btnSave').addEventListener('click', async () => {
+  const dateVal = document.getElementById('fDate').value;
+  if(!dateVal){ alert('Please choose a date.'); return; }
+  draft.date = editingDate || dateVal;
+  draft.video = document.getElementById('fVideo').value.trim();
+
+  if(!editingDate && entries[draft.date]){
+    if(!confirm('An entry already exists for ' + draft.date + '. Overwrite it?')) return;
+  }
+
+  const btn = document.getElementById('btnSave');
+  btn.disabled = true; btn.textContent = 'Saving...';
+  const ok = await saveEntry(draft);
+  btn.disabled = false; btn.textContent = 'Save Entry';
+  if(ok){
+    closeModal();
+    render();
+  }
+});
+
+document.getElementById('lightboxClose').addEventListener('click', () => document.getElementById('lightbox').classList.remove('show'));
+document.getElementById('lightbox').addEventListener('click', (e) => { if(e.target.id==='lightbox') e.target.classList.remove('show'); });
+
+/* ---------- Weekly report ---------- */
+document.getElementById('btnReport').addEventListener('click', () => {
+  const dates = Object.keys(entries).sort().reverse();
+  let out = `SITE LOG SUMMARY — Three-Bedroom Decoration\nGenerated: ${new Date().toISOString().slice(0,10)}\n`;
+  out += `${'='.repeat(50)}\n\n`;
+  if(!dates.length){ out += 'No entries logged yet.\n'; }
+  dates.forEach(dateStr => {
+    const e = entries[dateStr];
+    out += `${fmtDateLong(dateStr)}\n${'-'.repeat(40)}\n`;
+    if(e.trades && e.trades.length){
+      out += `Trades & Activity:\n`;
+      e.trades.forEach(t => out += `  - ${t}\n`);
+    }
+    if(e.materials && e.materials.length){
+      out += `Materials:\n`;
+      e.materials.forEach(m => out += `  - ${m.name}: ${m.qty}\n`);
+    }
+    if(e.flags && e.flags.length){
+      out += `Issues / To Confirm:\n`;
+      e.flags.forEach(f => out += `  - ${f}\n`);
+    }
+    if(e.plan && e.plan.length){
+      out += `Plan for Next Day:\n`;
+      e.plan.forEach(p => out += `  - ${p}\n`);
+    }
+    if(e.photos && e.photos.length) out += `Photos: ${e.photos.length} attached in log\n`;
+    if(e.video) out += `Video: ${e.video}\n`;
+    out += `\n`;
+  });
+  document.getElementById('reportText').value = out;
+  document.getElementById('reportOverlay').classList.add('show');
+});
+document.getElementById('btnCloseReport').addEventListener('click', () => document.getElementById('reportOverlay').classList.remove('show'));
+document.getElementById('btnCopyReport').addEventListener('click', () => {
+  const ta = document.getElementById('reportText');
+  ta.select();
+  try{
+    document.execCommand('copy');
+    document.getElementById('btnCopyReport').textContent = 'Copied!';
+    setTimeout(() => document.getElementById('btnCopyReport').textContent = 'Copy to Clipboard', 1400);
+  }catch(e){ console.error(e); }
+});
+
+/* ---------- Seed + init ---------- */
+async function seedMissingDefaults(){
+  const seed1 = {
+    date:"2026-09-01",
+    trades:[
+      "Electrical — Mr. David & team: commenced electrical wiring works on site.",
+      "Furniture — Mr. Peter: visited site, took measurements for doors and kitchen cabinet.",
+      "POP Contractor: delivered tools and materials ahead of tomorrow's POP and screeding work.",
+      "Electrician — Sunville Developer: site visit re: earthing. Advised opening the ground and tying the earthing to the perimeter fence."
+    ],
+    materials:[
+      {name:"Timber, 2x3", qty:"15 pieces"},
+      {name:"Timber, 2x4", qty:"14 boards"},
+      {name:"Sponge", qty:"50 kg"},
+      {name:"POP (Plaster of Paris) cement", qty:"34 bags (unconfirmed — approx. 34–35)"}
+    ],
+    flags:[
+      "Confirm exact POP cement bag count against contractor's delivery note.",
+      "Confirm scope/safety precautions before opening ground for earthing."
+    ],
+    plan:[
+      "Electrical team to continue wiring, including earthing works.",
+      "POP contractor to commence POP and screeding."
+    ],
+    photos:[], video:""
+  };
+  const seed2 = {
+    date:"2026-09-02",
+    trades:[
+      "Plumbing: plumber visited, organized layout and marked where the washing machine will stay.",
+      "Plumbing: flagged that the guest toilet door cannot open inward once toilet seats are fitted on each side — door will open outward instead.",
+      "Electrical: wiring finished except AC points — need another pipe run through a wall break for these.",
+      "POP: POP contractor started work."
+    ],
+    materials:[],
+    flags:[
+      "Guest toilet door swing changed to outward-opening — confirm this is accounted for in the door order."
+    ],
+    plan:[
+      "Plumbing team to commence their installation work."
+    ],
+    photos:[], video:""
+  };
+  const seed3 = {
+    date:"2026-09-03",
+    trades:[
+      "POP Contractor: started POP wall work properly — agreed timeline of two weeks for the POP walls.",
+      "Plumbing: plumber started work — did marking, began cracking walls and positioning, and checked water pressure."
+    ],
+    materials:[], flags:[],
+    plan:["POP and plumbing work to continue."],
+    photos:[], video:""
+  };
+  const seed4 = {
+    date:"2026-09-04",
+    trades:[
+      "POP Contractor: continued POP wall work.",
+      "Plumbing: continued wall cracking and positioning work.",
+      "Electrician: visited for a progress update and to get the AC line points marked.",
+      "Building management sent a supervisor to inspect the reported water leak from the neighboring building."
+    ],
+    materials:[],
+    flags:[
+      "Water leak repair confirmed but pending tenant/occupant go-ahead — slated for Monday (next week), expected to take about 4 hours to trace and locate the leaking pipe.",
+      "Plumber will need to patch the walls he cracked and cement those areas once plumbing work is complete.",
+      "Confirmed: the guest toilet door specifically will open outward, from outside (internal doors are separate and being measured for)."
+    ],
+    plan:[
+      "Continue POP and plumbing work into next week.",
+      "Water leak repair to proceed Monday, pending tenant go-ahead."
+    ],
+    photos:[], video:""
+  };
+
+  for(const seed of [seed1, seed2, seed3, seed4]){
+    const key = 'entry:' + seed.date;
+    let exists = false;
+    try{
+      const r = await window.storage.get(key, false);
+      exists = !!(r && r.value);
+    }catch(e){ exists = false; } // get throws on missing key — treat as not existing
+    if(!exists){
+      await saveEntry(seed);
+    }
+  }
+}
+
+(async function init(){
+  try{
+    await seedMissingDefaults();
+  }catch(e){ console.error('seed failed', e); }
+  await loadAllEntries();
+})();
+</script>
+</body>
+</html>
