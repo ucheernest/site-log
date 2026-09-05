@@ -1,54 +1,48 @@
-# Site Log — Three-Bedroom Decoration
+# Site Log — Three-Bedroom Apartment, Internal Decoration
 
-A daily site supervision log for the three-bedroom apartment internal
-decoration project. Runs entirely in your browser — no server, no
-database, nothing to install.
+This page is a running record of the internal decoration works taking
+place at the three-bedroom apartment. It exists to keep an accurate,
+day-by-day account of what happens on site — which trades were present,
+what work was carried out, what materials moved, what issues came up,
+and what's planned next — so that progress is never dependent on memory
+or scattered notes.
 
-## How to host this on GitHub Pages
+## What's being tracked
 
-You'll need a free GitHub account (github.com) if you don't already have one.
+The project covers internal decoration across the apartment, coordinated
+across several trades working in sequence and in parallel:
 
-1. **Create a new repository**
-   - Go to github.com → click the **+** in the top right → **New repository**.
-   - Name it something like `site-log` (any name works).
-   - Set it to **Public** (GitHub Pages on a free account requires a public repo).
-   - Click **Create repository**.
+- **Electrical** — wiring, AC line points, and earthing works
+- **Plumbing** — layout, wall work for pipe runs, water pressure checks,
+  and fixture positioning
+- **POP (Plaster of Paris)** — wall and ceiling finishing, running on an
+  agreed multi-week timeline
+- **Furniture** — measurements and fitting for doors and kitchen cabinetry
+- **Metal work** — backyard and front door metalwork
+- A separate, ongoing issue with a **water leak from the neighboring
+  building**, being tracked through to resolution alongside the main
+  decoration work
 
-2. **Upload the file**
-   - On your new repo's page, click **Add file → Upload files**.
-   - Upload `index.html` (the file in this folder).
-   - Scroll down and click **Commit changes**.
+Each day's visit is logged as its own entry: what trades were on site
+and what they did, materials delivered or used, anything flagged as an
+issue or needing confirmation, and the plan carried into the next visit.
+Photos can be attached directly to an entry as visual record of
+progress.
 
-3. **Turn on GitHub Pages**
-   - In your repo, go to **Settings → Pages** (left sidebar, under "Code and automation").
-   - Under **Build and deployment → Source**, choose **Deploy from a branch**.
-   - Under **Branch**, choose `main` and folder `/ (root)`, then **Save**.
-   - Wait about a minute, then refresh the page — GitHub will show you the
-     live link, something like:
-     `https://<your-username>.github.io/site-log/`
+## Why it's structured this way
 
-4. **That's your link.** Bookmark it, and open it from the same browser/device
-   each time so your entries stay put — see the note below.
+Site work moves fast and involves several contractors who aren't always
+on site at the same time. A single, chronological log — rather than
+separate notes per trade — makes it possible to see the whole picture
+at a glance: how one trade's work depends on another (for example,
+plumbing needing to patch walls it cracked before POP finishing can
+close them up), and to catch details that would otherwise get lost
+between visits, like a door swing direction agreed on site or a
+material quantity that needs double-checking.
 
-## Important: where your data lives
+## Current status
 
-This page saves entries in your browser's local storage — think of it as a
-notebook that lives on one specific device, in one specific browser. That
-means:
-
-- Opening the link on your phone won't show entries you added on your laptop
-  (and vice versa) — they're separate notebooks.
-- Clearing your browser's site data/history for this page will erase entries.
-- No one else can see or edit your entries just by having the link — but
-  they also won't see the *same* entries you see, since it's local to each
-  device.
-
-If you later want everyone on the same device/network to see the same live
-data (true shared hosting), that needs a small backend database behind it —
-let me know if you want that built out next.
-
-## Updating the site later
-
-Any time you want to change the page itself (not the log entries — those you
-edit right on the page), just upload a new version of `index.html` to the
-same repo, overwriting the old one. GitHub Pages will update automatically.
+Decoration work is actively in progress. Electrical wiring is
+substantially complete, POP wall work and plumbing are both underway,
+and a repair date has been set for the neighboring building's water
+leak. The log is updated as each site visit happens.
