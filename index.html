@@ -1028,8 +1028,52 @@ async function seedMissingDefaults(){
     ],
     photos:[], videos:[], videoLink:""
   };
+  const seed5 = {
+    date:"2026-09-07",
+    trades:[
+      "Plumbing: the plumber did not come to site as expected.",
+      "POP Contractor: continued POP wall work in the first room."
+    ],
+    materials:[],
+    flags:[
+      "Plumber absent on site — he indicated he would come Tuesday, 8 September, to continue the wall patching."
+    ],
+    plan:[
+      "First room expected to be completed by Tuesday, after which POP contractor moves on to the other rooms.",
+      "Plumber expected to return Tuesday to continue wall patching."
+    ],
+    photos:[], videos:[], videoLink:""
+  };
+  const seed6 = {
+    date:"2026-09-08",
+    trades:[
+      "Developers sent another team to inspect the leaking pipe from the neighboring building."
+    ],
+    materials:[],
+    flags:[
+      "The inspecting team advised the plumber handling the leak repair is currently out of town — expected back that day (Tuesday), with a further inspection planned for Wednesday, 9 September.",
+      "Hope expressed that the leak issue is resolved before tiling begins on site."
+    ],
+    plan:[
+      "Further leak inspection expected Wednesday, 9 September."
+    ],
+    photos:[], videos:[], videoLink:""
+  };
+  const seed7 = {
+    date:"2026-09-09",
+    trades:[
+      "Plumbing: wall patching (from the earlier wall-cracking/positioning work) was completed in full.",
+      "POP Contractor: completed the first room."
+    ],
+    materials:[], flags:[],
+    plan:[
+      "POP Contractor to move on to the remaining rooms.",
+      "Neighboring building's water leak repair still to be finalized — to be confirmed before tiling starts on site."
+    ],
+    photos:[], videos:[], videoLink:""
+  };
 
-  for(const seed of [seed1, seed2, seed3, seed4]){
+  for(const seed of [seed1, seed2, seed3, seed4, seed5, seed6, seed7]){
     let exists = false;
     try{
       const r = await idbGet(seed.date);
